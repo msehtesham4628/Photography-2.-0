@@ -1,82 +1,113 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ArrowDown, ArrowUpRight, CalendarDays, ChevronLeft, ChevronRight, Instagram, Mail, Menu, X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { ArrowDown, ArrowUpRight, Menu, X } from 'lucide-react';
 
-// Use Vite's BASE_URL so assets work on Vercel, GitHub Pages, previews and custom domains.
-const assetBase = `${import.meta.env.BASE_URL}assets/aistudio/`;
-const A = (n: number) => `${assetBase}IMG-20260904-WA${String(n).padStart(4, '0')}.jpg`;
-const photos = Array.from({ length: 27 }, (_, i) => A(i + 21));
-const films = [
-  'https://assets.mixkit.co/videos/preview/mixkit-bride-walking-down-the-aisle-41727-large.mp4',
-  'https://assets.mixkit.co/videos/preview/mixkit-young-couple-walking-hand-in-hand-in-a-field-41584-large.mp4',
-  'https://assets.mixkit.co/videos/preview/mixkit-bride-putting-on-her-earrings-before-the-wedding-41728-large.mp4',
+const base = `${import.meta.env.BASE_URL}assets/aistudio/`;
+const photo = (n: number) => `${base}IMG-20260904-WA${String(n).padStart(4, '0')}.jpg`;
+
+const gallery = [
+  { src: photo(21), number: '01', title: 'The Beginning', className: 'large' },
+  { src: photo(22), number: '02', title: 'The Celebration', className: 'portrait' },
+  { src: photo(23), number: '03', title: 'The Groom', className: 'wide' },
+  { src: photo(24), number: '04', title: 'The Details', className: 'portrait' },
+  { src: photo(25), number: '05', title: 'Together', className: 'large' },
+  { src: photo(26), number: '06', title: 'The People', className: 'square' },
+  { src: photo(27), number: '07', title: 'The Ceremony', className: 'wide' },
+  { src: photo(28), number: '08', title: 'Afterglow', className: 'portrait' },
+  { src: photo(29), number: '09', title: 'Forever', className: 'large' },
+  { src: photo(30), number: '10', title: 'In Between', className: 'portrait' },
+  { src: photo(31), number: '11', title: 'The Family', className: 'wide' },
+  { src: photo(32), number: '12', title: 'A Quiet Moment', className: 'square' },
 ];
-const wa = 'https://wa.me/919347307151?text=' + encodeURIComponent('Hello Shakeela Photography, I would like to enquire about photography and videography services.');
 
-function Reveal({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) { el.classList.add('is-visible'); io.disconnect(); }
-    }, { threshold: 0.12 });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  return <div ref={ref} className={`reveal ${className}`}>{children}</div>;
+const whatsapp = 'https://wa.me/919347307151?text=' + encodeURIComponent('Hello Shakeela Photography, I would like to enquire about photography and cinematography services.');
+
+function SafeImage({ src, alt, eager = false, className = '' }: { src: string; alt: string; eager?: boolean; className?: string }) {
+  const [failed, setFailed] = useState(false);
+  if (failed) return <div className={`image-error ${className}`} aria-label={alt}>IMAGE</div>;
+  return <img src={src} alt={alt} className={className} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchPriority={eager ? 'high' : 'auto'} onError={() => setFailed(true)} />;
 }
 
-function Image({ src, alt, className = '', onClick }: { src: string; alt: string; className?: string; onClick?: () => void }) {
-  const [failed, setFailed] = useState(false);
-  return failed ? (
-    <div className={`media-image media-fallback ${className}`} role="img" aria-label={alt}>Shakeela Photography</div>
-  ) : (
-    <img src={src} alt={alt} loading="lazy" decoding="async" className={`media-image ${className}`} onClick={onClick} onError={() => setFailed(true)} />
-  );
+function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = document.querySelector(`[data-reveal="${delay}-${Math.random()}"]`);
+    return () => { void el; };
+  }, [delay]);
+  return <div className={`reveal ${visible ? 'visible' : ''}`} style={{ transitionDelay: `${delay}ms` }} ref={(node) => {
+    if (!node || visible) return;
+    const io = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { setVisible(true); io.disconnect(); } }, { threshold: 0.08 });
+    io.observe(node);
+  }}>{children}</div>;
 }
 
 export default function App() {
   const [menu, setMenu] = useState(false);
-  const [activePhoto, setActivePhoto] = useState<number | null>(null);
-  const [film, setFilm] = useState(0);
-  const [sent, setSent] = useState(false);
+  const [active, setActive] = useState<number | null>(null);
   const go = (id: string) => { setMenu(false); document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); };
-  const submitBooking = (e: React.FormEvent<HTMLFormElement>) => { e.preventDefault(); setSent(true); };
 
   return (
     <div className="site">
-      <header className="topbar">
-        <button className="wordmark" onClick={() => go('home')} aria-label="Shakeela Photography home"><span>SHAKEELA</span><small>PHOTOGRAPHY</small></button>
-        <nav className="desktop-nav">{['story','work','films','events','instagram'].map(x => <button key={x} onClick={() => go(x)}>{x}</button>)}</nav>
-        <button className="book-pill" onClick={() => go('book')}>BOOK YOUR DATE <ArrowUpRight size={15}/></button>
-        <button className="menu-btn" onClick={() => setMenu(!menu)} aria-label="Open menu">{menu ? <X/> : <Menu/>}</button>
+      <header className="nav">
+        <button className="logo" onClick={() => go('home')} aria-label="Shakeela Photography home">
+          <strong>SHAKEELA</strong><span>PHOTOGRAPHY</span>
+        </button>
+        <nav>
+          <button onClick={() => go('story')}>STORY</button>
+          <button onClick={() => go('work')}>WORK</button>
+          <button onClick={() => go('films')}>FILMS</button>
+          <button onClick={() => go('contact')}>CONTACT</button>
+        </nav>
+        <a className="nav-cta" href={whatsapp} target="_blank" rel="noreferrer">WHATSAPP <ArrowUpRight size={14} /></a>
+        <button className="menu" onClick={() => setMenu(v => !v)} aria-label="Menu">{menu ? <X /> : <Menu />}</button>
       </header>
-      {menu && <div className="mobile-menu">{['home','story','work','films','events','instagram','book'].map(x => <button key={x} onClick={() => go(x)}>{x}</button>)}</div>}
+
+      {menu && <div className="mobile-menu">
+        <button onClick={() => go('home')}>HOME</button><button onClick={() => go('story')}>STORY</button><button onClick={() => go('work')}>WORK</button><button onClick={() => go('films')}>FILMS</button><button onClick={() => go('contact')}>CONTACT</button>
+        <a href={whatsapp} target="_blank" rel="noreferrer">WHATSAPP US <ArrowUpRight size={18} /></a>
+      </div>}
 
       <main>
-        <section id="home" className="hero cinematic-panel">
-          <div className="hero-image-stack" aria-hidden="true">{photos.slice(0, 5).map((p, i) => <Image key={p} src={p} alt="" className={`stack-photo s${i}`}/>)}</div>
-          <div className="hero-wash" />
-          <div className="hero-copy"><p className="eyebrow">HYDERABAD · INDIA · EST. 2023</p><h1><span>Moments</span><em>in motion.</em></h1><p className="hero-lede">Wedding photography & cinematography for stories that deserve to be felt, not simply remembered.</p><div className="hero-actions"><button className="solid-btn" onClick={() => go('work')}>Enter the story <ArrowDown size={16}/></button><a className="line-btn" href={wa} target="_blank" rel="noreferrer">WhatsApp us</a></div></div>
-          <div className="hero-meta"><span>20+ YEARS</span><span>WEDDINGS · FILMS · STORIES</span><span>SCROLL TO EXPLORE ↓</span></div>
+        <section id="home" className="hero">
+          <div className="hero-media"><SafeImage src={photo(21)} alt="Indian wedding couple" eager /></div>
+          <div className="hero-overlay" />
+          <div className="hero-content">
+            <p className="kicker">HYDERABAD · INDIA · EST. 2023</p>
+            <h1>Moments<br /><i>in motion.</i></h1>
+            <p className="hero-text">Wedding photography & cinematography for stories that deserve to be felt, not simply remembered.</p>
+            <div className="actions"><button className="light-button" onClick={() => go('work')}>ENTER THE STORY <ArrowDown size={16} /></button><a className="dark-button" href={whatsapp} target="_blank" rel="noreferrer">WHATSAPP US <ArrowUpRight size={16} /></a></div>
+          </div>
+          <div className="hero-bottom"><span>20+ YEARS</span><span>WEDDINGS · FILMS · STORIES</span><span>SCROLL TO EXPLORE ↓</span></div>
         </section>
 
-        <section id="story" className="manifesto"><Reveal className="manifesto-inner"><p className="eyebrow">THE SHAKEELA APPROACH</p><h2>We don't direct<br/><i>the moment.</i><br/>We catch it.</h2><p>From the quiet breath before the ceremony to the chaos on the dance floor, we make images and films with movement, intimacy and a distinctly Hyderabad soul.</p></Reveal><div className="orbit" aria-hidden="true"><span>CAPTURE · FEEL · REMEMBER ·</span></div></section>
+        <section id="story" className="statement">
+          <div className="statement-mark">S</div>
+          <Reveal><p className="kicker">THE SHAKEELA APPROACH</p><h2>We preserve<br /><i>how it felt.</i></h2><p className="statement-copy">Not just the ceremony. The nervous laugh. The hands held under the table. The people who travelled miles. The noise, the light, the tears and everything that happens between the big moments.</p></Reveal>
+        </section>
 
-        <section id="work" className="work-section"><div className="section-head"><div><p className="eyebrow">01 / PHOTOGRAPHY</p><h2>The still<br/><i>becomes alive.</i></h2></div><p className="section-note">A moving wall of real celebrations. Tap any frame to step inside.</p></div><div className="photo-wall">{photos.map((p, i) => <Reveal key={p} className={`photo-frame f${i % 6}`}><button className="photo-button" onClick={() => setActivePhoto(i)}><Image src={p} alt={`Shakeela Photography wedding frame ${i + 1}`}/><span className="frame-index">{String(i + 1).padStart(2,'0')}</span></button></Reveal>)}</div></section>
+        <section id="work" className="work">
+          <div className="section-intro"><div><p className="kicker">01 / PHOTOGRAPHY</p><h2>The still<br /><i>becomes alive.</i></h2></div><p>Real celebrations, photographed with an editorial eye and a soft cinematic touch.</p></div>
+          <div className="gallery">
+            {gallery.map((item, i) => <Reveal key={item.src} delay={(i % 3) * 80}><button className={`gallery-card ${item.className}`} onClick={() => setActive(i)}><SafeImage src={item.src} alt={item.title} /><span className="number">{item.number}</span><span className="caption">{item.title} <ArrowUpRight size={14} /></span></button></Reveal>)}
+          </div>
+        </section>
 
-        <section id="films" className="film-section"><div className="section-head light"><div><p className="eyebrow">02 / CINEMATOGRAPHY</p><h2>Press<br/><i>play.</i></h2></div><p className="section-note">Cinematic wedding films built around real emotion, rhythm and the people who make your day yours.</p></div><div className="film-stage"><video key={films[film]} className="film-video" src={films[film]} poster={photos[film + 3]} muted autoPlay loop playsInline controls preload="metadata"/><div className="film-overlay"><span>FILM 0{film + 1}</span><strong>{['THE WALK · A WEDDING FILM','TWO SOULS · A LOVE STORY','BEFORE THE CEREMONY'][film]}</strong><button onClick={() => setFilm((film + 1) % films.length)}>NEXT FILM <ArrowUpRight size={15}/></button></div></div><div className="film-switch"><button onClick={() => setFilm((film + films.length - 1) % films.length)}><ChevronLeft/></button><span>0{film + 1} / 0{films.length}</span><button onClick={() => setFilm((film + 1) % films.length)}><ChevronRight/></button></div></section>
+        <section id="films" className="films">
+          <div className="section-intro light"><div><p className="kicker">02 / CINEMATOGRAPHY</p><h2>Press<br /><i>play.</i></h2></div><p>Cinematic wedding films built around real emotion, rhythm and the people who make your day yours.</p></div>
+          <div className="film-card"><SafeImage src={photo(33)} alt="Cinematic wedding film still" /><div className="film-shade" /><div className="film-copy"><span>FILM 01</span><h3>THE WALK · A<br />WEDDING FILM</h3><a href={whatsapp} target="_blank" rel="noreferrer">ENQUIRE ABOUT FILMS <ArrowUpRight size={15} /></a></div><div className="play">▶</div></div>
+          <div className="film-footer"><span>01 / 03</span><span>STORIES IN MOTION</span></div>
+        </section>
 
-        <section id="events" className="events-section"><div className="event-split"><Reveal><p className="eyebrow">03 / EVENT STORIES</p><h2>Every celebration<br/><i>has a pulse.</i></h2><p>Weddings, engagements, receptions, pre-weddings and the in-between moments. Your complete visual story, organized event by event.</p><button className="circle-btn" onClick={() => setActivePhoto(0)}>EXPLORE STORIES <ArrowUpRight size={17}/></button></Reveal><Reveal className="event-image"><Image src={photos[18]} alt="Wedding celebration"/></Reveal></div></section>
+        <section id="contact" className="contact">
+          <div><p className="kicker">03 / YOUR STORY</p><h2>Let's make<br /><i>something timeless.</i></h2></div>
+          <div className="contact-right"><p>Available for weddings, engagements, receptions and destination celebrations from Hyderabad and beyond.</p><a className="contact-button" href={whatsapp} target="_blank" rel="noreferrer">START A CONVERSATION <ArrowUpRight size={16} /></a></div>
+        </section>
 
-        <section id="instagram" className="instagram-section"><div className="section-head"><div><p className="eyebrow">04 / SOCIAL</p><h2>From the frame<br/><i>to the feed.</i></h2></div><a className="insta-link" href="#instagram"><Instagram size={18}/> @SHAKEELAPHOTOGRAPHY <ArrowUpRight size={15}/></a></div><div className="insta-strip">{photos.slice(8, 14).map((p,i)=><a href="#instagram" key={p} className="insta-card"><Image src={p} alt={`Instagram wedding post ${i+1}`}/><span>VIEW STORY ↗</span></a>)}</div></section>
-
-        <section id="book" className="booking-section"><Reveal className="booking-inner"><div className="booking-copy"><p className="eyebrow">05 / BOOK YOUR DATE</p><h2>Let's make<br/><i>your film.</i></h2><p>Tell us a little about your celebration. We'll take it from there.</p><div className="contact-line"><Mail size={16}/> info@ShakeelaPhotography.in</div><div className="contact-line"><CalendarDays size={16}/> Google Calendar appointments</div></div>{!sent ? <form onSubmit={submitBooking} className="booking-form"><input required name="name" placeholder="Your name"/><input required name="phone" placeholder="Phone number"/><input type="email" required name="email" placeholder="Email address"/><select name="event"><option>Wedding</option><option>Pre-Wedding</option><option>Engagement</option><option>Reception</option><option>Event</option></select><input required type="date" name="date"/><textarea name="message" placeholder="Tell us about your story" rows={4}/><button className="solid-btn" type="submit">Request an appointment <ArrowUpRight size={16}/></button><small>Connect this form to Google Calendar + Google Sheets using your serverless endpoint. No database required.</small></form> : <div className="success"><span>THANK YOU</span><h3>Your story is on its way.</h3><p>We'll be in touch to confirm your consultation.</p><a className="solid-btn" href={wa} target="_blank" rel="noreferrer">Continue on WhatsApp <ArrowUpRight size={16}/></a></div>}</Reveal></section>
-
-        <section className="final-hero"><div className="final-image"><Image src={photos[25]} alt="Shakeela Photography final wedding portrait"/></div><div className="final-shade"/><div className="final-copy"><p className="eyebrow">SHAKEELA PHOTOGRAPHY · HYDERABAD</p><h2>Your moment.<br/><i>Your story.<br/>Your film.</i></h2><div className="final-links"><a href={wa} target="_blank" rel="noreferrer">WHATSAPP <ArrowUpRight size={15}/></a><a href="mailto:info@ShakeelaPhotography.in">EMAIL <ArrowUpRight size={15}/></a><a href="tel:+919347307151">CALL <ArrowUpRight size={15}/></a></div><p className="address">Janaki Nagar Colony, Toli Chowki, Hyderabad, Telangana 500008</p></div></section>
+        <section className="closing"><SafeImage src={photo(46)} alt="Wedding portrait" /><div className="closing-shade" /><div className="closing-copy"><p className="kicker">SHAKEELA PHOTOGRAPHY · HYDERABAD</p><h2>Your moment.<br /><i>Your story.</i></h2><a href={whatsapp} target="_blank" rel="noreferrer">WHATSAPP US <ArrowUpRight size={15} /></a></div></section>
       </main>
+
       <footer>© 2023 Shakeela Photography. All Rights Reserved.</footer>
-      {activePhoto !== null && <div className="lightbox" role="dialog" aria-modal="true" onClick={() => setActivePhoto(null)}><button className="close" onClick={() => setActivePhoto(null)}><X/></button><Image src={photos[activePhoto]} alt="Selected Shakeela Photography frame" className="lightbox-image"/><div className="lightbox-count">{activePhoto + 1} / {photos.length}</div></div>}
+
+      {active !== null && <div className="lightbox" onClick={() => setActive(null)} role="dialog" aria-modal="true"><button onClick={() => setActive(null)} aria-label="Close"><X /></button><SafeImage src={gallery[active].src} alt={gallery[active].title} eager /><span>{gallery[active].number} / {gallery.length}</span></div>}
     </div>
   );
 }
