@@ -22,86 +22,49 @@ export default function App() {
 
   const scrollToBooking = () => {
     const el = document.getElementById('book-your-date');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
   const scrollToStory = () => {
     const el = document.getElementById('cinematic-story');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
   const scrollToPhotography = () => {
     const el = document.getElementById('photography-showcase');
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <div className="relative min-h-screen bg-[#FAF8F5] text-[#141312] selection:bg-[#EAE0D5] selection:text-[#141312]">
-      {/* Overlay Navigation */}
       <Navigation
         onBookClick={scrollToBooking}
         onOpenDriveManager={() => setIsAdminDriveOpen(true)}
       />
-
-      {/* Floating WhatsApp Button */}
       <FloatingWhatsApp />
 
-      {/* Main Continuous Cinematic Sequence */}
       <main className="w-full">
-        {/* 1. OPENING HERO */}
-        <OpeningHero
-          onBookClick={scrollToBooking}
-          onExploreClick={scrollToStory}
-        />
-
-        {/* 2. CINEMATIC STORY */}
-        <CinematicStory
-          onExploreGallery={scrollToPhotography}
-        />
-
-        {/* 3. ABOUT */}
-        <AboutSection
-          onBookClick={scrollToBooking}
-        />
-
-        {/* 4. PHOTOGRAPHY */}
-        <PhotographyShowcase
-          onBookClick={scrollToBooking}
-        />
-
-        {/* 5. VIDEOGRAPHY / FILMS */}
+        <OpeningHero onBookClick={scrollToBooking} onExploreClick={scrollToStory} />
+        <CinematicStory onExploreGallery={scrollToPhotography} />
+        <AboutSection onBookClick={scrollToBooking} />
+        <PhotographyShowcase onBookClick={scrollToBooking} />
         <VideographySection />
-
-        {/* 6. EVENT STORIES */}
         <EventStoriesSection
           onBookClick={scrollToBooking}
           onOpenDriveManager={() => setIsAdminDriveOpen(true)}
         />
-
-        {/* 7. INSTAGRAM */}
         <InstagramSection />
-
-        {/* 8. BOOK YOUR DATE */}
         <BookingSection />
-
-        {/* 9. FINAL HERO — ABSOLUTE END (NOTHING AFTER THIS) */}
-        <FinalHero
-          onBookClick={scrollToBooking}
-        />
+        <FinalHero onBookClick={scrollToBooking} />
       </main>
 
-      {/* Admin Google Drive Content Management Modal */}
       {isAdminDriveOpen && (
-        <AdminDriveModal
-          onClose={() => setIsAdminDriveOpen(false)}
-        />
+        <AdminDriveModal onClose={() => setIsAdminDriveOpen(false)} />
       )}
+
+      <footer className="flex min-h-[64px] items-center justify-center border-t border-black/10 bg-[#FAF8F5] px-6 py-5 text-center text-[11px] tracking-[0.18em] text-black/50">
+        © 2023 Shakeela Photography. All Rights Reserved.
+      </footer>
     </div>
   );
 }
