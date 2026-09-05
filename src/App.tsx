@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { ArrowDown, ArrowUpRight, Menu, X } from 'lucide-react';
 
-const base = `${import.meta.env.BASE_URL}assets/aistudio/`;
+// Vite serves everything inside /public from the site root.
+// Keep these URLs absolute so they work correctly on Vercel, AI Studio,
+// and any custom domain instead of depending on import.meta.env.BASE_URL.
+const base = '/assets/aistudio/';
 const photo = (n: number) => `${base}IMG-20260904-WA${String(n).padStart(4, '0')}.jpg`;
 
 const gallery = [
@@ -23,27 +26,54 @@ const whatsapp = 'https://wa.me/919347307151?text=' + encodeURIComponent('Hello 
 
 function SafeImage({ src, alt, eager = false, className = '' }: { src: string; alt: string; eager?: boolean; className?: string }) {
   const [failed, setFailed] = useState(false);
-  if (failed) return <div className={`image-error ${className}`} aria-label={alt}>IMAGE</div>;
-  return <img src={src} alt={alt} className={className} loading={eager ? 'eager' : 'lazy'} decoding="async" fetchPriority={eager ? 'high' : 'auto'} onError={() => setFailed(true)} />;
+
+  if (failed) {
+    return <div className={`image-error ${className}`} aria-label={alt} />;
+  }
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      className={className}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+      fetchPriority={eager ? 'high' : 'auto'}
+      onError={() => setFailed(true)}
+    />
+  );
 }
 
 function Reveal({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
   const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = document.querySelector(`[data-reveal="${delay}-${Math.random()}"]`);
-    return () => { void el; };
-  }, [delay]);
-  return <div className={`reveal ${visible ? 'visible' : ''}`} style={{ transitionDelay: `${delay}ms` }} ref={(node) => {
-    if (!node || visible) return;
-    const io = new IntersectionObserver(([entry]) => { if (entry.isIntersecting) { setVisible(true); io.disconnect(); } }, { threshold: 0.08 });
-    io.observe(node);
-  }}>{children}</div>;
+
+  return (
+    <div
+      className={`reveal ${visible ? 'visible' : ''}`}
+      style={{ transitionDelay: `${delay}ms` }}
+      ref={(node) => {
+        if (!node || visible) return;
+        const io = new IntersectionObserver(([entry]) => {
+          if (entry.isIntersecting) {
+            setVisible(true);
+            io.disconnect();
+          }
+        }, { threshold: 0.08 });
+        io.observe(node);
+      }}
+    >
+      {children}
+    </div>
+  );
 }
 
 export default function App() {
   const [menu, setMenu] = useState(false);
   const [active, setActive] = useState<number | null>(null);
-  const go = (id: string) => { setMenu(false); document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); };
+  const go = (id: string) => {
+    setMenu(false);
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <div className="site">
@@ -62,7 +92,11 @@ export default function App() {
       </header>
 
       {menu && <div className="mobile-menu">
-        <button onClick={() => go('home')}>HOME</button><button onClick={() => go('story')}>STORY</button><button onClick={() => go('work')}>WORK</button><button onClick={() => go('films')}>FILMS</button><button onClick={() => go('contact')}>CONTACT</button>
+        <button onClick={() => go('home')}>HOME</button>
+        <button onClick={() => go('story')}>STORY</button>
+        <button onClick={() => go('work')}>WORK</button>
+        <button onClick={() => go('films')}>FILMS</button>
+        <button onClick={() => go('contact')}>CONTACT</button>
         <a href={whatsapp} target="_blank" rel="noreferrer">WHATSAPP US <ArrowUpRight size={18} /></a>
       </div>}
 
@@ -74,7 +108,10 @@ export default function App() {
             <p className="kicker">HYDERABAD · INDIA · EST. 2023</p>
             <h1>Moments<br /><i>in motion.</i></h1>
             <p className="hero-text">Wedding photography & cinematography for stories that deserve to be felt, not simply remembered.</p>
-            <div className="actions"><button className="light-button" onClick={() => go('work')}>ENTER THE STORY <ArrowDown size={16} /></button><a className="dark-button" href={whatsapp} target="_blank" rel="noreferrer">WHATSAPP US <ArrowUpRight size={16} /></a></div>
+            <div className="actions">
+              <button className="light-button" onClick={() => go('work')}>ENTER THE STORY <ArrowDown size={16} /></button>
+              <a className="dark-button" href={whatsapp} target="_blank" rel="noreferrer">WHATSAPP US <ArrowUpRight size={16} /></a>
+            </div>
           </div>
           <div className="hero-bottom"><span>20+ YEARS</span><span>WEDDINGS · FILMS · STORIES</span><span>SCROLL TO EXPLORE ↓</span></div>
         </section>
