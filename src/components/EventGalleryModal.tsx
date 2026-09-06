@@ -75,6 +75,7 @@ export const EventGalleryModal: React.FC<EventGalleryModalProps> = ({
             <video
               controls
               playsInline
+              preload="metadata"
               poster={event.coverPhoto}
               className="w-full h-full object-cover"
             >

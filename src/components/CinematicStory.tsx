@@ -160,6 +160,7 @@ export const CinematicStory: React.FC<CinematicStoryProps> = ({ onExploreGallery
                 loop
                 muted
                 playsInline
+                preload="metadata"
                 poster={currentScene.photoUrl}
                 className={`absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 ${
                   isPlayingSceneVideo ? 'opacity-100' : 'opacity-0 pointer-events-none'

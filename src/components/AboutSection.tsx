@@ -1,188 +1,251 @@
-import React from 'react';
-import { Award, Camera, Video, Film, CheckCircle2, HeartHandshake, Sparkles, MapPin } from 'lucide-react';
-import { motion } from 'motion/react';
+import React, { useRef, useEffect } from 'react';
+import {
+  Award,
+  Sparkles,
+  Camera,
+  Film,
+  Tv,
+  ShieldCheck,
+  ChevronDown,
+  ArrowUpRight,
+  MessageCircle,
+  Calendar
+} from 'lucide-react';
+import {
+  OFFICIAL_PHOTOGRAPHER,
+  OFFICIAL_TITLE,
+  OFFICIAL_STATS,
+  OFFICIAL_PHONE,
+  OFFICIAL_INSTAGRAM_URL,
+  OFFICIAL_INSTAGRAM_HANDLE
+} from '../data/instagramData';
+
+const aboutVideoH264 = '/assets/about-reel-h264.mp4';
+const aboutVideoOriginal = '/assets/about-reel.mp4';
+const aboutPoster = '/assets/about-reel-poster.jpg';
 
 interface AboutSectionProps {
-  onBookClick: () => void;
+  onExploreCollection: () => void;
+  onBookAppointment: () => void;
 }
 
-export const AboutSection: React.FC<AboutSectionProps> = ({ onBookClick }) => {
-  const pillars = [
-    {
-      title: '20+ Years Experience',
-      desc: 'Two decades of documenting royal Nizami weddings, multicultural celebrations, and heirloom legacies across India.',
-      icon: Award
-    },
-    {
-      title: 'Timeless Photography',
-      desc: 'Natural skin tones, authentic ambient light, and unforced moments that remain elegant fifty years from today.',
-      icon: Camera
-    },
-    {
-      title: 'Cinematography',
-      desc: 'Colour-graded 4K anamorphic cinema lenses paired with bespoke sound design and evocative storytelling.',
-      icon: Film
-    },
-    {
-      title: 'Discreet Emotion',
-      desc: 'We merge into your family’s circle with warmth, documenting raw tears, quiet whispers, and grand jubilation.',
-      icon: HeartHandshake
-    }
-  ];
+export const AboutSection: React.FC<AboutSectionProps> = ({
+  onExploreCollection,
+  onBookAppointment
+}) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-  const services = [
-    'Wedding Photography',
-    'Wedding Videography',
-    'Candid Photography',
-    'Cinematography',
-    'Pre-Wedding Photography',
-    'Engagement Photography',
-    'Reception Photography',
-    'Event Photography',
-    'All Types of Functions'
-  ];
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.defaultMuted = true;
+    video.muted = true;
+    video.playsInline = true;
+
+    const playVideo = () => {
+      video.play().catch(() => {});
+    };
+
+    playVideo();
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          playVideo();
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section
-      id="about-section"
-      className="relative w-full py-24 sm:py-32 bg-[#FAF8F5] text-[#141312] overflow-hidden border-b border-[#EAE2D7]"
+      id="about"
+      className="relative w-full min-h-screen bg-[#070605] text-white flex flex-col justify-between overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Editorial Top Eyebrow */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-10 border-b border-[#E3D9CD] mb-16 gap-4">
-          <div className="flex items-center space-x-3">
-            <span className="text-xs uppercase font-serif tracking-[0.25em] text-[#857B72]">
-              ESTABLISHED IN HYDERABAD
-            </span>
-            <span className="w-8 h-[1px] bg-[#997328]" />
-            <span className="text-xs font-mono text-[#997328]">1999 — PRESENT</span>
+      {/* 1. VISIBLE FULL-BLEED HORIZONTAL BACKGROUND VIDEO */}
+      <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none">
+        <video
+          ref={videoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          poster={aboutPoster}
+          className="absolute inset-0 w-full h-full object-cover object-center filter brightness-[0.88] saturate-[1.05]"
+        >
+          <source src={aboutVideoH264} type="video/mp4" />
+          <source src={aboutVideoOriginal} type="video/mp4" />
+        </video>
+
+        {/* Delicate, translucent cinematic overlay so the video is vividly visible with crisp motion */}
+        <div className="absolute inset-0 bg-gradient-to-t from-[#070605] via-[#070605]/30 to-[#070605]/60" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-black/50" />
+      </div>
+
+      {/* 2. FOREGROUND HERO CONTENT */}
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-5 sm:px-10 lg:px-16 pt-28 sm:pt-36 pb-16 flex-1 flex flex-col justify-between">
+        {/* Top Tag & Heritage Badge */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-6 max-w-full">
+          <div className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-full bg-black/60 border border-[#C5A059]/50 text-[#E6B85C] text-xs font-mono uppercase tracking-wider backdrop-blur-md shadow-lg max-w-full">
+            <Award className="w-3.5 h-3.5 text-[#C5A059] shrink-0" />
+            <span className="truncate">ABOUT US · 24+ YEARS OF NIZAMI HERITAGE</span>
           </div>
 
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full border border-[#D5C7B7] bg-[#F4EFEA] text-xs text-[#4A433D] font-medium tracking-wider">
-            <Award className="w-3.5 h-3.5 text-[#997328]" />
-            <span>Best Female Photographer of the Year</span>
-          </div>
+          <a
+            href={OFFICIAL_INSTAGRAM_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-full bg-black/60 hover:bg-black/80 border border-white/20 text-white text-xs font-mono tracking-wider transition-all backdrop-blur-md shadow-md max-w-full"
+          >
+            <span className="truncate max-w-[200px] sm:max-w-none">{OFFICIAL_INSTAGRAM_HANDLE}</span>
+            <ArrowUpRight className="w-3.5 h-3.5 text-[#C5A059] shrink-0" />
+          </a>
         </div>
 
-        {/* Hero Narrative Block */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-          {/* Left Column: Editorial Headline & Big Quote */}
-          <div className="lg:col-span-7 space-y-8">
-            <div className="space-y-4">
-              <span className="text-xs font-mono tracking-[0.3em] text-[#997328] uppercase block">
-                ABOUT SHAKEELA PHOTOGRAPHY
+        {/* Centerpiece Hero Narrative & Metrics */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center my-auto py-8">
+          <div className="lg:col-span-8 space-y-6">
+            <div className="space-y-2">
+              <span className="font-mono text-xs uppercase tracking-[0.35em] text-[#C5A059] block">
+                {OFFICIAL_PHOTOGRAPHER} · {OFFICIAL_TITLE}
               </span>
-              <h2 className="text-4xl sm:text-6xl md:text-7xl font-serif tracking-[0.06em] uppercase text-[#141312] leading-[1.05]">
-                20+ YEARS OF CAPTURING STORIES
-              </h2>
+              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal leading-[0.95] uppercase tracking-[-0.03em] text-white">
+                Preserving <br />
+                <i className="font-normal italic text-[#C5A059]">Heritage,</i> <br />
+                One Vow At A Time.
+              </h1>
             </div>
 
-            <p className="text-lg sm:text-xl text-[#3D3732] font-light leading-relaxed font-serif border-l-2 border-[#997328] pl-6 py-1">
-              "With more than 20 years of experience, Shakeela Photography captures weddings, celebrations and special moments through timeless photography and cinematic films."
+            <p className="text-base sm:text-xl text-white/90 font-light font-sans leading-relaxed max-w-2xl">
+              Honored as Hyderabad's <strong>Best Female Photographer of the Year</strong>, Syeda Shakila Qazi brings over two decades of artistic mastery to Royal Nizami weddings, sacred Nikah ceremonies, and cinematic heirlooms.
             </p>
 
-            <p className="text-sm sm:text-base text-[#615850] font-light leading-relaxed">
-              Based in the historic cultural heart of Toli Chowki, Hyderabad, Shakeela Photography represents a legacy of feminine sensitivity, technical mastery, and artistic poise. Recognized as the Best Female Photographer of the Year, Shakeela and her master cinematography crew bring an elevated, editorial eye to every sacred ceremony.
-            </p>
+            <blockquote className="border-l-2 border-[#C5A059] pl-4 sm:pl-6 py-1 text-sm sm:text-base text-white/80 italic font-serif max-w-xl">
+              “A royal wedding is an everlasting heirloom of whispered prayers, stolen glances, and sacred memories.”
+            </blockquote>
 
-            {/* Services Grid with Custom Ticks */}
-            <div className="pt-4">
-              <h4 className="text-xs font-serif uppercase tracking-[0.2em] text-[#7A7168] mb-4">
-                SPECIALIZED DISCIPLINES & SERVICES
-              </h4>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
-                {services.map((svc) => (
-                  <div
-                    key={svc}
-                    className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-[#F4EFE9]/80 border border-[#E8DFD3] text-xs text-[#2E2925] font-medium hover:border-[#997328] transition-colors"
-                  >
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#997328] shrink-0" />
-                    <span className="truncate">{svc}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Quick Action */}
-            <div className="pt-2 flex items-center space-x-4">
+            {/* Action CTAs */}
+            <div className="flex flex-wrap items-center gap-4 pt-3">
               <button
-                onClick={onBookClick}
-                className="px-6 py-3 rounded-full bg-[#141312] text-[#FAF8F5] text-xs font-serif tracking-[0.18em] uppercase hover:bg-[#997328] transition-all shadow-md active:scale-95"
+                type="button"
+                onClick={onExploreCollection}
+                className="inline-flex items-center justify-center gap-2.5 px-7 sm:px-9 py-4 rounded-full bg-[#C5A059] hover:bg-[#b08e4d] text-[#070605] font-mono text-xs uppercase tracking-widest font-bold transition-all shadow-xl hover:scale-[1.02] cursor-pointer"
               >
-                SCHEDULE CONSULTATION
+                <span>OUR COLLECTION</span>
+                <ChevronDown className="w-4 h-4" />
               </button>
-              <div className="flex items-center space-x-1.5 text-xs text-[#7A7168]">
-                <MapPin className="w-3.5 h-3.5 text-[#997328]" />
-                <span>Toli Chowki, Hyderabad</span>
-              </div>
+
+              <button
+                type="button"
+                onClick={onBookAppointment}
+                className="inline-flex items-center justify-center gap-2.5 px-7 sm:px-8 py-4 rounded-full bg-white/10 hover:bg-white/20 border border-white/25 text-white font-mono text-xs uppercase tracking-widest font-medium transition-all backdrop-blur-md shadow-md cursor-pointer"
+              >
+                <Sparkles className="w-4 h-4 text-[#C5A059]" />
+                <span>BOOK APPOINTMENT</span>
+              </button>
+
+              <a
+                href={`https://wa.me/919347307151?text=${encodeURIComponent(
+                  'Hello Syeda Shakila Qazi, I would like to inquire about royal wedding photography & cinematography bookings!'
+                )}`}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center justify-center gap-2 px-5 py-4 rounded-full bg-black/50 hover:bg-black/70 border border-[#25D366]/40 text-[#25D366] font-mono text-xs uppercase tracking-wider transition-all backdrop-blur-md"
+              >
+                <MessageCircle className="w-4 h-4 fill-current" />
+                <span className="hidden sm:inline">WHATSAPP: {OFFICIAL_PHONE}</span>
+                <span className="sm:hidden">WHATSAPP</span>
+              </a>
             </div>
           </div>
 
-          {/* Right Column: Layered Editorial Photographic Composition */}
-          <div className="lg:col-span-5 relative">
-            <div className="relative mx-auto max-w-md lg:max-w-none">
-              {/* Primary Heritage Portrait */}
-              <div className="aspect-3/4 rounded-2xl overflow-hidden shadow-2xl border border-white relative z-10 bg-[#E8DFD3]">
-                <img
-                  src="https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&w=1200&q=85"
-                  alt="Shakeela Photography Editorial Bridal Portrait"
-                  className="w-full h-full object-cover object-center"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 text-white">
-                  <span className="text-[10px] uppercase font-mono tracking-widest block opacity-80">
-                    AWARDED DISTINCTION
-                  </span>
-                  <p className="font-serif text-lg tracking-wide">
-                    Best Female Photographer of the Year
-                  </p>
+          {/* Right Metrics & Capabilities Box */}
+          <div className="lg:col-span-4 space-y-4">
+            <div className="rounded-3xl bg-black/60 backdrop-blur-md border border-white/15 p-6 sm:p-8 space-y-6 shadow-2xl">
+              <div className="flex items-center justify-between pb-4 border-b border-white/10">
+                <span className="font-mono text-xs uppercase tracking-widest text-white/70">STUDIO ACCREDITATION</span>
+                <span className="text-[#C5A059] font-mono text-xs font-bold">EST. 2000</span>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+                  <div className="font-serif text-2xl sm:text-3xl text-[#C5A059] font-medium">
+                    {OFFICIAL_STATS.experience}
+                  </div>
+                  <div className="text-[11px] font-mono text-white/70 uppercase pt-1">
+                    CRAFT LEGACY
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+                  <div className="font-serif text-2xl sm:text-3xl text-white font-medium">
+                    {OFFICIAL_STATS.posts}
+                  </div>
+                  <div className="text-[11px] font-mono text-white/70 uppercase pt-1">
+                    ROYAL ARCHIVES
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+                  <div className="font-serif text-2xl sm:text-3xl text-white font-medium">
+                    {OFFICIAL_STATS.followers}
+                  </div>
+                  <div className="text-[11px] font-mono text-white/70 uppercase pt-1">
+                    INSTAGRAM FANS
+                  </div>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10">
+                  <div className="font-serif text-2xl sm:text-3xl text-[#C5A059] font-medium">
+                    100%
+                  </div>
+                  <div className="text-[11px] font-mono text-white/70 uppercase pt-1">
+                    FEMALE-LED CREW
+                  </div>
                 </div>
               </div>
 
-              {/* Overlapping Secondary Detail Frame */}
-              <div className="hidden sm:block absolute -bottom-8 -left-10 w-48 aspect-square rounded-xl overflow-hidden shadow-xl border-2 border-white z-20 bg-[#F4EFE9]">
-                <img
-                  src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80"
-                  alt="Intricate bridal details"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Experience Stamp */}
-              <div className="absolute -top-6 -right-6 z-20 w-28 h-28 rounded-full bg-[#141312] text-[#FAF8F5] p-3 flex flex-col items-center justify-center text-center shadow-2xl border-2 border-[#E8DFD3]">
-                <span className="text-2xl font-serif font-bold text-[#C5A059]">20+</span>
-                <span className="text-[9px] uppercase tracking-widest font-sans">
-                  YEARS OF STORIES
-                </span>
+              <div className="space-y-2 pt-2 text-xs font-mono text-white/75">
+                <div className="flex items-center gap-2">
+                  <Camera className="w-3.5 h-3.5 text-[#C5A059]" />
+                  <span>Cinematic Royal Photography</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Film className="w-3.5 h-3.5 text-[#C5A059]" />
+                  <span>4K HDR Wedding Films</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Tv className="w-3.5 h-3.5 text-[#C5A059]" />
+                  <span>Live LED Drone & Crane Coverage</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#C5A059]" />
+                  <span>Complete Parda / Privacy Protocol</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Four Architectural Pillars (Non-boring layout) */}
-        <div className="mt-24 pt-16 border-t border-[#E3D9CD] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {pillars.map((pillar, idx) => {
-            const Icon = pillar.icon;
-            return (
-              <div
-                key={pillar.title}
-                className="group relative p-6 rounded-2xl bg-[#F7F2EB]/70 border border-[#E3D9CD] hover:border-[#997328] hover:bg-[#FAF8F5] transition-all duration-300"
-              >
-                <div className="w-10 h-10 rounded-xl bg-[#FAF8F5] border border-[#D5C7B7] flex items-center justify-center mb-5 text-[#997328] group-hover:bg-[#141312] group-hover:text-[#FAF8F5] transition-colors">
-                  <Icon className="w-5 h-5" />
-                </div>
-                <span className="text-[11px] font-mono text-[#8C8379] tracking-widest block mb-1">
-                  0{idx + 1}
-                </span>
-                <h3 className="text-lg font-serif tracking-wide text-[#141312] uppercase mb-2">
-                  {pillar.title}
-                </h3>
-                <p className="text-xs text-[#6A625A] font-light leading-relaxed">
-                  {pillar.desc}
-                </p>
-              </div>
-            );
-          })}
+        {/* Bottom Scroll Indicator */}
+        <div className="pt-6 border-t border-white/10 flex items-center justify-between text-xs font-mono text-white/50">
+          <div>HYDERABAD · TELANGANA · DESTINATION ROYAL WEDDINGS</div>
+          <button
+            type="button"
+            onClick={onExploreCollection}
+            className="flex items-center gap-2 hover:text-white transition-colors cursor-pointer text-white/70"
+          >
+            <span>EXPLORE OUR COLLECTION</span>
+            <ChevronDown className="w-4 h-4 text-[#C5A059]" />
+          </button>
         </div>
       </div>
     </section>

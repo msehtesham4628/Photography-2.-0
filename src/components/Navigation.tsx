@@ -1,202 +1,155 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X, Volume2, VolumeX, Calendar, Phone, ArrowUpRight } from 'lucide-react';
-import { cinematicAudio } from '../utils/audio';
+import { Menu, X, Sparkles, MessageCircle, Calendar, ArrowUpRight } from 'lucide-react';
+import { OFFICIAL_PHONE } from '../data/instagramData';
 
 interface NavigationProps {
-  onBookClick: () => void;
-  onOpenDriveManager: () => void;
+  onNavigate: (sectionId: string) => void;
+  currentSection?: string;
 }
 
-export const Navigation: React.FC<NavigationProps> = ({ onBookClick, onOpenDriveManager }) => {
+export const Navigation: React.FC<NavigationProps> = ({ onNavigate, currentSection }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
+      setIsScrolled(window.scrollY > 30);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const toggleSound = () => {
-    const playing = cinematicAudio.toggle();
-    setIsAudioPlaying(playing);
-  };
-
-  const navLinks = [
-    { label: 'HOME', href: '#opening-hero' },
-    { label: 'STORIES', href: '#cinematic-story' },
-    { label: 'ABOUT', href: '#about-section' },
-    { label: 'PHOTOGRAPHY', href: '#photography-showcase' },
-    { label: 'FILMS', href: '#videography-section' },
-    { label: 'EVENTS', href: '#event-stories' },
-    { label: 'INSTAGRAM', href: '#instagram-section' },
+  const navItems = [
+    { id: 'about', label: 'About Us' },
+    { id: 'collection', label: 'Our Collection' },
+    { id: 'appointment', label: 'Book Appointment' }
   ];
 
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
+  const handleNavClick = (id: string) => {
     setMobileMenuOpen(false);
-    const target = document.querySelector(href);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
-    }
+    onNavigate(id);
   };
 
   return (
     <>
       <header
-        id="main-navigation"
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           isScrolled
-            ? 'bg-[#FAF8F5]/90 backdrop-blur-md shadow-xs py-3 border-b border-[#EAE2D7]/80'
-            : 'bg-gradient-to-b from-[#FAF8F5]/80 via-[#FAF8F5]/40 to-transparent py-5'
+            ? 'bg-[#070605]/90 backdrop-blur-xl border-b border-white/15 py-3 shadow-2xl'
+            : 'bg-gradient-to-b from-[#070605]/95 via-[#070605]/60 to-transparent py-5'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            {/* Brand Logo */}
-            <a
-              href="#opening-hero"
-              onClick={(e) => handleLinkClick(e, '#opening-hero')}
-              className="flex flex-col group text-left"
-            >
-              <span className="font-serif tracking-[0.25em] text-lg sm:text-xl font-bold text-[#141312] uppercase group-hover:text-[#997328] transition-colors">
-                SHAKEELA
-              </span>
-              <span className="text-[9px] tracking-[0.35em] text-[#7A746E] uppercase font-sans font-medium">
-                PHOTOGRAPHY • HYDERABAD
-              </span>
-            </a>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 flex items-center justify-between">
+          {/* Brand Identity */}
+          <button
+            type="button"
+            onClick={() => handleNavClick('about')}
+            className="flex flex-col text-left group cursor-pointer"
+          >
+            <span className="font-serif tracking-[0.22em] text-lg sm:text-xl font-medium text-white group-hover:text-[#C5A059] transition-colors">
+              SHAKEELA PHOTOGRAPHY
+            </span>
+            <span className="text-[10px] font-mono tracking-[0.3em] text-[#C5A059] uppercase">
+              SYEDA SHAKILA QAZI · HYDERABAD
+            </span>
+          </button>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-8">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={(e) => handleLinkClick(e, link.href)}
-                  className="text-xs tracking-[0.2em] font-medium text-[#2C2926] hover:text-[#997328] transition-colors uppercase relative py-1 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-0 after:h-[1px] after:bg-[#997328] hover:after:w-full after:transition-all after:duration-300"
+          {/* Nav Items (Requested: About Us, Our Collection, Book Appointment) */}
+          <nav className="hidden md:flex items-center space-x-8">
+            {navItems.map((item) => {
+              const isActive = currentSection === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => handleNavClick(item.id)}
+                  className={`text-xs font-mono uppercase tracking-[0.2em] transition-all py-1 cursor-pointer relative ${
+                    isActive
+                      ? 'text-[#C5A059] font-semibold'
+                      : 'text-white/80 hover:text-white'
+                  }`}
                 >
-                  {link.label}
-                </a>
-              ))}
-            </nav>
+                  {item.label}
+                  {isActive && (
+                    <span className="absolute -bottom-1 left-0 right-0 h-[2px] bg-[#C5A059] rounded-full" />
+                  )}
+                </button>
+              );
+            })}
+          </nav>
 
-            {/* Right Action Cluster */}
-            <div className="hidden sm:flex items-center space-x-4">
-              {/* Ambient Audio Toggle */}
-              <button
-                onClick={toggleSound}
-                title={isAudioPlaying ? 'Mute Cinema Sound' : 'Play Cinema Ambient Sound'}
-                className="flex items-center space-x-2 px-3 py-1.5 rounded-full border border-[#DCD3C7] bg-[#F4EFEA]/80 text-[#3A3531] hover:border-[#997328] hover:text-[#997328] transition-all text-xs tracking-wider font-medium"
-              >
-                {isAudioPlaying ? (
-                  <>
-                    <Volume2 className="w-3.5 h-3.5 text-[#997328] animate-pulse" />
-                    <span className="text-[11px] font-sans">SOUND ON</span>
-                  </>
-                ) : (
-                  <>
-                    <VolumeX className="w-3.5 h-3.5 text-[#7A746E]" />
-                    <span className="text-[11px] font-sans text-[#7A746E]">SOUND OFF</span>
-                  </>
-                )}
-              </button>
+          {/* Right Action Cluster */}
+          <div className="hidden sm:flex items-center space-x-3">
+            <button
+              type="button"
+              onClick={() => handleNavClick('appointment')}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#C5A059] hover:bg-[#b08e4d] text-[#070605] font-mono text-xs uppercase tracking-widest font-bold transition-all shadow-lg hover:scale-[1.02] cursor-pointer"
+            >
+              <Calendar className="w-3.5 h-3.5" />
+              <span>BOOK NOW</span>
+            </button>
 
-              {/* Drive Admin Badge */}
-              <button
-                onClick={onOpenDriveManager}
-                title="Google Drive Event Manager"
-                className="hidden xl:inline-flex items-center text-[10px] tracking-wider uppercase px-2.5 py-1 rounded border border-dashed border-[#C5B49F] text-[#6A625A] hover:bg-[#EFE9DF] transition-colors"
-              >
-                Drive CMS
-              </button>
-
-              {/* Book CTA */}
-              <button
-                onClick={onBookClick}
-                className="inline-flex items-center space-x-2 px-5 py-2 rounded-full bg-[#141312] text-[#FAF8F5] text-xs font-medium tracking-[0.15em] uppercase hover:bg-[#997328] hover:shadow-md transition-all active:scale-95"
-              >
-                <Calendar className="w-3.5 h-3.5" />
-                <span>BOOK YOUR DATE</span>
-              </button>
-            </div>
-
-            {/* Mobile Action & Hamburger */}
-            <div className="flex items-center space-x-3 lg:hidden">
-              <button
-                onClick={toggleSound}
-                className="p-2 rounded-full text-[#3A3531] border border-[#DCD3C7]"
-                aria-label="Toggle Sound"
-              >
-                {isAudioPlaying ? (
-                  <Volume2 className="w-4 h-4 text-[#997328]" />
-                ) : (
-                  <VolumeX className="w-4 h-4 text-[#7A746E]" />
-                )}
-              </button>
-
-              <button
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 text-[#141312] focus:outline-hidden"
-                aria-label="Toggle menu"
-              >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-              </button>
-            </div>
+            <a
+              href={`https://wa.me/919347307151?text=${encodeURIComponent(
+                'Hello Syeda Shakila Qazi, I am inquiring about booking a wedding photography consultation.'
+              )}`}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-[#25D366] text-xs font-mono tracking-wider transition-all backdrop-blur-md"
+              title="WhatsApp Consultation"
+            >
+              <MessageCircle className="w-3.5 h-3.5 fill-current" />
+              <span className="hidden lg:inline">WHATSAPP</span>
+            </a>
           </div>
+
+          {/* Mobile Menu Trigger */}
+          <button
+            type="button"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white transition-colors cursor-pointer"
+            aria-label="Toggle Navigation Menu"
+          >
+            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
         </div>
 
-        {/* Mobile Navigation Drawer */}
+        {/* Mobile Dropdown */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#FAF8F5] border-b border-[#E8DFD3] px-6 pt-4 pb-8 space-y-4 shadow-xl animate-in slide-in-from-top-4 duration-300">
-            <div className="flex flex-col space-y-3 pt-2">
-              {navLinks.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={(e) => handleLinkClick(e, link.href)}
-                  className="text-sm tracking-[0.2em] font-medium text-[#141312] hover:text-[#997328] py-2 border-b border-[#F0EAE1]"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
-
-            <div className="pt-3 space-y-3">
+          <div className="md:hidden px-5 pt-4 pb-6 bg-[#0e0c0b]/98 backdrop-blur-2xl border-b border-white/15 space-y-3 mt-3 animate-in fade-in slide-in-from-top-4 duration-200">
+            {navItems.map((item) => (
               <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onBookClick();
-                }}
-                className="w-full py-3 rounded-full bg-[#141312] text-[#FAF8F5] text-xs font-medium tracking-[0.2em] uppercase flex items-center justify-center space-x-2 shadow-md hover:bg-[#997328] transition-colors"
+                key={item.id}
+                type="button"
+                onClick={() => handleNavClick(item.id)}
+                className="w-full text-left py-3 px-4 rounded-xl hover:bg-white/10 text-white font-mono text-sm uppercase tracking-wider transition-colors flex items-center justify-between"
+              >
+                <span>{item.label}</span>
+                <span className="text-xs text-[#C5A059]">→</span>
+              </button>
+            ))}
+
+            <div className="pt-3 border-t border-white/10 space-y-2">
+              <button
+                type="button"
+                onClick={() => handleNavClick('appointment')}
+                className="w-full py-3.5 rounded-xl bg-[#C5A059] text-black font-mono text-xs uppercase tracking-widest font-bold flex items-center justify-center gap-2"
               >
                 <Calendar className="w-4 h-4" />
-                <span>BOOK YOUR DATE</span>
+                <span>BOOK APPOINTMENT</span>
               </button>
 
               <a
-                href="tel:+919347307151"
-                className="w-full py-2.5 rounded-full border border-[#DCD3C7] text-[#141312] text-xs font-medium tracking-[0.15em] uppercase flex items-center justify-center space-x-2 bg-[#F5EFE7]"
+                href={`https://wa.me/919347307151?text=${encodeURIComponent(
+                  'Hello Syeda Shakila Qazi, I am inquiring from your mobile website.'
+                )}`}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-3 rounded-xl bg-white/10 border border-white/20 text-white font-mono text-xs uppercase tracking-wider flex items-center justify-center gap-2"
               >
-                <Phone className="w-3.5 h-3.5" />
-                <span>+91 93473 07151</span>
+                <MessageCircle className="w-4 h-4 text-[#25D366] fill-current" />
+                <span>WHATSAPP {OFFICIAL_PHONE}</span>
               </a>
-
-              <div className="pt-2 flex justify-between items-center text-xs text-[#7A746E]">
-                <span>Shakeela Photography, Hyderabad</span>
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenDriveManager();
-                  }}
-                  className="underline text-[11px] text-[#997328]"
-                >
-                  Drive Event CMS
-                </button>
-              </div>
             </div>
           </div>
         )}

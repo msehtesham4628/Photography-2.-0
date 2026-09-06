@@ -12,25 +12,44 @@ export const OpeningHero: React.FC<OpeningHeroProps> = ({ onBookClick, onExplore
   const [isMuted, setIsMuted] = useState(true);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
 
-  // Path resolver for standard Vite / Next / static deployments
-  const posterSrc = '/assets/aistudio/IMG-20260904-WA0021.jpg';
-  const videoSrc = '/assets/aistudio/VID-20260904-WA0048.mp4';
+  // Path resolver for Instagram Reel video assets
+  const posterSrc = '/assets/hero-reel-poster.jpg';
+  const videoSrc = '/assets/hero-reel-h264.mp4';
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
+    video.defaultMuted = true;
     video.muted = true;
-    const playPromise = video.play();
+    video.playsInline = true;
 
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => setIsVideoPlaying(true))
-        .catch(() => {
-          // Keep poster visible if autoplay is blocked or format unsupported
-          setIsVideoPlaying(false);
-        });
-    }
+    const playVideo = () => {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => setIsVideoPlaying(true))
+          .catch(() => {
+            setIsVideoPlaying(false);
+          });
+      }
+    };
+
+    playVideo();
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          playVideo();
+        } else {
+          video.pause();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    observer.observe(video);
+    return () => observer.disconnect();
   }, []);
 
   const toggleMute = () => {
@@ -74,7 +93,8 @@ export const OpeningHero: React.FC<OpeningHeroProps> = ({ onBookClick, onExplore
             loop
             muted
             playsInline
-            preload="auto"
+            preload="metadata"
+            poster={posterSrc}
             onPlaying={() => setIsVideoPlaying(true)}
             onError={() => setIsVideoPlaying(false)}
             className={`w-full h-full object-cover object-center transition-opacity duration-1000 ${
@@ -82,6 +102,7 @@ export const OpeningHero: React.FC<OpeningHeroProps> = ({ onBookClick, onExplore
             }`}
           >
             <source src={videoSrc} type="video/mp4" />
+            <source src="/assets/hero-reel.mp4" type="video/mp4" />
           </video>
         </motion.div>
 

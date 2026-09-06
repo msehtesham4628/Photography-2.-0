@@ -1,6 +1,8 @@
 {
   "name": "Shakeela Photography",
-  "description": "High-end cinematic wedding photography and videography studio in Hyderabad with 20+ years of capturing timeless stories and luxury films.",
+  "description": "Shakeela Photography (@shakeela__photography) by Syeda Shakila Qazi — Best Female Photographer of the Year. 24+ years of luxury wedding photography, cinematic films, and drone cinema in Hyderabad, India.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
