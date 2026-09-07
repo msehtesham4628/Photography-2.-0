@@ -4,8 +4,23 @@ export const OFFICIAL_INSTAGRAM_URL = 'https://www.instagram.com/shakeela__photo
 export const OFFICIAL_INSTAGRAM_HANDLE = '@shakeela__photography';
 export const OFFICIAL_PHONE = '+91 9347307151';
 export const OFFICIAL_PHONE_RAW = '9347307151';
+export const OFFICIAL_GOOGLE_PHONE = '+91 89253 76845';
+export const OFFICIAL_GOOGLE_PHONE_RAW = '8925376845';
 export const OFFICIAL_PHONE_ALT = '+91 93904 89371';
 export const OFFICIAL_EMAIL = 'info@ShakeelaPhotography.in';
+
+// Google Business Profile Studio Location (Toli Chowki, Hyderabad)
+export const OFFICIAL_STUDIO_LOCATION = {
+  name: 'Shakeela Photography (Studio Branch)',
+  address: 'Janaki Nagar Colony, Toli Chowki, Hyderabad, Telangana 500008',
+  landmark: 'Near Toli Chowki X Roads',
+  phone: '089253 76845',
+  hours: 'Open 24 Hours',
+  rating: 4.4,
+  reviewsCount: 137
+};
+
+// Registered Corporate Office
 export const OFFICIAL_ADDRESS = 'SHAKEELA PHOTOGRAPHY, 8-4-68/3/127, Ali Nagar, East Bandlaguda, Mailardevpally, Circle 19, Hyderabad, Telangana, India';
 export const OFFICIAL_EMPLOYER = 'MOHAMMED ADNAN KHAN';
 export const OFFICIAL_REGISTRATION = {

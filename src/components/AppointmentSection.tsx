@@ -17,6 +17,7 @@ import {
 import {
   OFFICIAL_PHONE,
   OFFICIAL_PHONE_RAW,
+  OFFICIAL_GOOGLE_PHONE,
   OFFICIAL_ADDRESS,
   OFFICIAL_REGISTRATION
 } from '../data/instagramData';
@@ -289,11 +290,17 @@ Assalamu Alaikum Syeda Shakila Qazi, I would love to confirm our consultation sl
             </div>
 
             {/* Quick Phone Consultation Note */}
-            <div className="pt-1 flex items-center gap-3 text-xs font-mono text-white/70">
-              <Phone className="w-4 h-4 text-[#C5A059]" />
-              <span>
-                Direct Studio Booking: <strong className="text-white">{OFFICIAL_PHONE}</strong>
-              </span>
+            <div className="pt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs font-mono text-white/70">
+              <div className="flex items-center gap-2">
+                <Phone className="w-3.5 h-3.5 text-[#C5A059]" />
+                <span>
+                  WhatsApp Booking: <strong className="text-white">{OFFICIAL_PHONE}</strong>
+                </span>
+              </div>
+              <span>•</span>
+              <div>
+                Helpline: <strong className="text-white">{OFFICIAL_GOOGLE_PHONE}</strong>
+              </div>
             </div>
           </div>
 

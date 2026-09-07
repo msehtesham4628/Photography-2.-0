@@ -16,9 +16,11 @@ import {
   OFFICIAL_INSTAGRAM_URL,
   OFFICIAL_INSTAGRAM_HANDLE,
   OFFICIAL_PHONE,
+  OFFICIAL_GOOGLE_PHONE,
   OFFICIAL_PHONE_ALT,
   OFFICIAL_EMAIL,
   OFFICIAL_ADDRESS,
+  OFFICIAL_STUDIO_LOCATION,
   OFFICIAL_STATS,
   OFFICIAL_REGISTRATION
 } from '../data/instagramData';
@@ -165,42 +167,56 @@ export const FooterSection: React.FC = () => {
         {/* Directory Card */}
         <div className="mt-8 rounded-2xl bg-black/60 backdrop-blur-md border border-white/15 p-6 sm:p-8 shadow-xl space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-6 border-b border-white/10">
-            {/* Registered Studio Address */}
+            {/* Primary Studio Branch (Google Verified Location) */}
             <div className="md:col-span-6 space-y-2 text-xs font-mono text-white/80">
-              <div className="flex items-center gap-2 text-white font-semibold uppercase tracking-wider">
-                <MapPin className="w-4 h-4 text-[#C5A059]" />
-                <span>REGISTERED STUDIO ADDRESS</span>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-white font-semibold uppercase tracking-wider">
+                  <MapPin className="w-4 h-4 text-[#C5A059]" />
+                  <span>STUDIO BRANCH (TOLI CHOWKI)</span>
+                </div>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#107c41]/20 border border-[#107c41]/50 text-[#34A853] font-bold">
+                  ★ 4.4 (137 GOOGLE REVIEWS)
+                </span>
               </div>
               <p className="font-sans text-sm text-white/90 leading-relaxed font-medium">
-                {OFFICIAL_ADDRESS}
+                {OFFICIAL_STUDIO_LOCATION.address}
               </p>
-              <div className="text-[11px] text-[#C5A059] flex items-center gap-2 pt-1 font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]" />
-                <span>Circle 19 · Hyderabad, Telangana</span>
+              <div className="text-[11px] text-[#C5A059] flex flex-wrap items-center gap-x-3 gap-y-1 pt-1 font-mono">
+                <span className="flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#34A853]" />
+                  <span>{OFFICIAL_STUDIO_LOCATION.hours}</span>
+                </span>
+                <span>•</span>
+                <a
+                  href={`tel:${OFFICIAL_GOOGLE_PHONE.replace(/\s+/g, '')}`}
+                  className="hover:text-white transition-colors"
+                >
+                  Landline/Helpline: {OFFICIAL_GOOGLE_PHONE}
+                </a>
               </div>
             </div>
 
-            {/* Direct Phone & Inquiries */}
+            {/* Registered Corporate Headquarters & Direct Booking */}
             <div className="md:col-span-6 space-y-2 text-xs font-mono text-white/80">
               <div className="flex items-center gap-2 text-white font-semibold uppercase tracking-wider">
-                <Phone className="w-4 h-4 text-[#C5A059]" />
-                <span>DIRECT BOOKINGS &amp; INQUIRIES</span>
+                <MapPin className="w-4 h-4 text-[#C5A059]" />
+                <span>REGISTERED HEADQUARTERS &amp; BOOKINGS</span>
               </div>
-              <div className="flex flex-wrap gap-x-5 gap-y-1.5 font-sans text-sm">
-                <a href={`tel:${OFFICIAL_PHONE}`} className="text-white hover:text-[#C5A059] transition-colors font-medium">
-                  {OFFICIAL_PHONE}
-                </a>
-                <span className="text-white/40 hidden sm:inline">•</span>
-                <a href={`tel:${OFFICIAL_PHONE_ALT}`} className="text-white/90 hover:text-[#C5A059] transition-colors">
-                  {OFFICIAL_PHONE_ALT}
+              <p className="font-sans text-xs text-white/75 leading-relaxed">
+                {OFFICIAL_ADDRESS}
+              </p>
+              <div className="flex flex-wrap gap-x-4 gap-y-1 font-sans text-sm pt-1">
+                <a href={`tel:${OFFICIAL_PHONE}`} className="text-white hover:text-[#C5A059] transition-colors font-medium flex items-center gap-1.5">
+                  <Phone className="w-3.5 h-3.5 text-[#C5A059]" />
+                  <span>{OFFICIAL_PHONE}</span>
                 </a>
                 <span className="text-white/40 hidden sm:inline">•</span>
                 <a href={`mailto:${OFFICIAL_EMAIL}`} className="text-white/80 hover:text-white transition-colors">
                   {OFFICIAL_EMAIL}
                 </a>
               </div>
-              <p className="text-[11px] text-white/65 font-sans pt-1">
-                Available across Telangana, Andhra Pradesh, and global destination royal weddings.
+              <p className="text-[11px] text-white/60 font-sans">
+                Available across Hyderabad, Telangana, Andhra Pradesh, and royal destination weddings.
               </p>
             </div>
           </div>
