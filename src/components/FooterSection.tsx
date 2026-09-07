@@ -247,6 +247,21 @@ export const FooterSection: React.FC = () => {
             </div>
           </div>
 
+          {/* Internal SEO Navigation Links */}
+          <nav aria-label="Footer Quick Links" className="py-3 border-b border-white/10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-mono text-white/70">
+            <a href="#about" className="hover:text-[#C5A059] transition-colors">About Us</a>
+            <span className="text-white/20">•</span>
+            <a href="#collection" className="hover:text-[#C5A059] transition-colors">Our Collection</a>
+            <span className="text-white/20">•</span>
+            <a href="#appointment" className="hover:text-[#C5A059] transition-colors">Book Appointment</a>
+            <span className="text-white/20">•</span>
+            <a href="#faq" className="hover:text-[#C5A059] transition-colors">Bridal FAQ &amp; Guide</a>
+            <span className="text-white/20">•</span>
+            <a href="https://www.instagram.com/shakeela__photography" target="_blank" rel="noreferrer" className="hover:text-[#C5A059] transition-colors">
+              Instagram @shakeela__photography
+            </a>
+          </nav>
+
           {/* Copyright & Accolades */}
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] font-mono text-white/55">
             <div>

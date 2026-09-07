@@ -1,0 +1,24 @@
+# Robots.txt for Shakeela Photography (https://shakeelaphotography.in)
+User-agent: *
+Allow: /
+Allow: /assets/
+Allow: /#about
+Allow: /#collection
+Allow: /#appointment
+Allow: /#faq
+Allow: /#contact
+
+# Googlebot specific directives
+User-agent: Googlebot
+Allow: /
+Allow: /*.jpg
+Allow: /*.jpeg
+Allow: /*.png
+Allow: /*.mp4
+Allow: /*.webp
+
+# Crawl delay
+Crawl-delay: 1
+
+# Sitemap
+Sitemap: https://shakeelaphotography.in/sitemap.xml

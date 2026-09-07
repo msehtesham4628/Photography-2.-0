@@ -22,7 +22,8 @@ export const Navigation: React.FC<NavigationProps> = ({ onNavigate, currentSecti
   const navItems = [
     { id: 'about', label: 'About Us' },
     { id: 'collection', label: 'Our Collection' },
-    { id: 'appointment', label: 'Book Appointment' }
+    { id: 'appointment', label: 'Book Appointment' },
+    { id: 'faq', label: 'FAQ' }
   ];
 
   const handleNavClick = (id: string) => {

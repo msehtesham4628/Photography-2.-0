@@ -3,6 +3,7 @@ import { Navigation } from './components/Navigation';
 import { AboutSection } from './components/AboutSection';
 import { CollectionSection } from './components/CollectionSection';
 import { AppointmentSection } from './components/AppointmentSection';
+import { FaqSection } from './components/FaqSection';
 import { FooterSection } from './components/FooterSection';
 import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 
@@ -20,7 +21,7 @@ export default function App() {
   // Track active section on scroll
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['about', 'collection', 'appointment'];
+      const sections = ['about', 'collection', 'appointment', 'faq'];
       const scrollPosition = window.scrollY + window.innerHeight / 3;
 
       for (const sectionId of sections) {
@@ -42,7 +43,7 @@ export default function App() {
 
   return (
     <div className="relative w-full min-h-screen bg-[#070605] text-[#FAF8F5] overflow-x-hidden selection:bg-[#C5A059] selection:text-black">
-      {/* 1. PERSISTENT NAVIGATION BAR: About Us, Our Collection, Book Appointment */}
+      {/* 1. PERSISTENT NAVIGATION BAR: About Us, Our Collection, Book Appointment, FAQ */}
       <Navigation
         onNavigate={scrollTo}
         currentSection={currentSection}
@@ -62,10 +63,13 @@ export default function App() {
       {/* 4. BOOK APPOINTMENT (Royal Nizami Wedding Consultation & Inquiry) */}
       <AppointmentSection />
 
-      {/* 5. FOOTER */}
+      {/* 5. FREQUENTLY ASKED QUESTIONS & SEO BRIDAL GUIDE (Google Rich Snippet Search Optimization) */}
+      <FaqSection />
+
+      {/* 6. FOOTER */}
       <FooterSection />
 
-      {/* 6. FLOATING WHATSAPP BUTTON (Direct VIP Studio Access) */}
+      {/* 7. FLOATING WHATSAPP BUTTON (Direct VIP Studio Access) */}
       <FloatingWhatsApp />
     </div>
   );
