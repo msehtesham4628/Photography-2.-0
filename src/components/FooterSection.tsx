@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import {
   Instagram,
   Phone,
@@ -7,7 +7,10 @@ import {
   Mail,
   ArrowUpRight,
   Sparkles,
-  Heart
+  Heart,
+  ShieldCheck,
+  FileCheck2,
+  ExternalLink
 } from 'lucide-react';
 import {
   OFFICIAL_INSTAGRAM_URL,
@@ -16,8 +19,10 @@ import {
   OFFICIAL_PHONE_ALT,
   OFFICIAL_EMAIL,
   OFFICIAL_ADDRESS,
-  OFFICIAL_STATS
+  OFFICIAL_STATS,
+  OFFICIAL_REGISTRATION
 } from '../data/instagramData';
+import { RegistrationCertificateModal } from './RegistrationCertificateModal';
 
 const footerVideoH264 = '/assets/footer-reel-h264.mp4';
 const footerVideoOriginal = '/assets/footer-reel.mp4';
@@ -28,6 +33,7 @@ const whatsappBookingUrl = `https://wa.me/919347307151?text=${encodeURIComponent
 )}`;
 
 export const FooterSection: React.FC = () => {
+  const [isCertModalOpen, setIsCertModalOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -157,27 +163,28 @@ export const FooterSection: React.FC = () => {
         </div>
 
         {/* Directory Card */}
-        <div className="mt-8 rounded-2xl bg-black/60 backdrop-blur-md border border-white/15 p-6 sm:p-8 shadow-xl">
+        <div className="mt-8 rounded-2xl bg-black/60 backdrop-blur-md border border-white/15 p-6 sm:p-8 shadow-xl space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8 pb-6 border-b border-white/10">
-            {/* Studio Address */}
+            {/* Registered Studio Address */}
             <div className="md:col-span-6 space-y-2 text-xs font-mono text-white/80">
               <div className="flex items-center gap-2 text-white font-semibold uppercase tracking-wider">
                 <MapPin className="w-4 h-4 text-[#C5A059]" />
-                <span>HYDERABAD STUDIO HEADQUARTERS</span>
+                <span>REGISTERED STUDIO ADDRESS</span>
               </div>
-              <p className="font-sans text-sm text-white/85 leading-relaxed">
+              <p className="font-sans text-sm text-white/90 leading-relaxed font-medium">
                 {OFFICIAL_ADDRESS}
               </p>
-              <span className="text-[11px] text-[#C5A059] block pt-1">
-                Established 2000 · 24+ Years of Nizami Wedding Legacy
-              </span>
+              <div className="text-[11px] text-[#C5A059] flex items-center gap-2 pt-1 font-mono">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C5A059]" />
+                <span>Circle 19 · Hyderabad, Telangana</span>
+              </div>
             </div>
 
             {/* Direct Phone & Inquiries */}
             <div className="md:col-span-6 space-y-2 text-xs font-mono text-white/80">
               <div className="flex items-center gap-2 text-white font-semibold uppercase tracking-wider">
                 <Phone className="w-4 h-4 text-[#C5A059]" />
-                <span>DIRECT BOOKINGS & INQUIRIES</span>
+                <span>DIRECT BOOKINGS &amp; INQUIRIES</span>
               </div>
               <div className="flex flex-wrap gap-x-5 gap-y-1.5 font-sans text-sm">
                 <a href={`tel:${OFFICIAL_PHONE}`} className="text-white hover:text-[#C5A059] transition-colors font-medium">
@@ -198,8 +205,50 @@ export const FooterSection: React.FC = () => {
             </div>
           </div>
 
+          {/* Government of Telangana Registration Authentication Strip */}
+          <div className="p-4 rounded-xl bg-white/[0.04] border border-[#C5A059]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-start sm:items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-[#107c41]/20 border border-[#107c41]/50 flex items-center justify-center shrink-0">
+                <ShieldCheck className="w-5 h-5 text-[#34A853]" />
+              </div>
+              <div className="space-y-0.5 text-xs font-mono">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-bold text-white uppercase">GOVERNMENT OF TELANGANA</span>
+                  <span className="text-white/40">•</span>
+                  <span className="text-[#34A853] font-semibold">LABOUR DEPARTMENT REGISTERED</span>
+                </div>
+                <div className="text-white/70 text-[11px] flex flex-wrap items-center gap-x-2">
+                  <span>Reg. No: <strong className="text-white font-mono">{OFFICIAL_REGISTRATION.regNo}</strong></span>
+                  <span className="text-white/30">•</span>
+                  <span>Employer: <strong className="text-white font-mono">{OFFICIAL_REGISTRATION.employerName}</strong></span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 self-stretch sm:self-auto shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsCertModalOpen(true)}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#C5A059]/15 hover:bg-[#C5A059]/25 border border-[#C5A059]/40 text-[#E6B85C] text-xs font-mono font-medium transition-all cursor-pointer"
+              >
+                <FileCheck2 className="w-3.5 h-3.5" />
+                <span>View Certificate</span>
+              </button>
+
+              <a
+                href={OFFICIAL_REGISTRATION.verificationUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white transition-colors"
+                title="Verify at labour.telangana.gov.in"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+
           {/* Copyright & Accolades */}
-          <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] font-mono text-white/55">
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] font-mono text-white/55">
             <div>
               © 2000–2026 SHAKEELA PHOTOGRAPHY · SYEDA SHAKILA QAZI · ALL RIGHTS RESERVED
             </div>
@@ -211,6 +260,12 @@ export const FooterSection: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Registration Certificate Modal */}
+      <RegistrationCertificateModal
+        isOpen={isCertModalOpen}
+        onClose={() => setIsCertModalOpen(false)}
+      />
     </footer>
   );
 };

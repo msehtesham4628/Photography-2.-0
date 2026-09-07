@@ -17,8 +17,10 @@ import {
 import {
   OFFICIAL_PHONE,
   OFFICIAL_PHONE_RAW,
-  OFFICIAL_ADDRESS
+  OFFICIAL_ADDRESS,
+  OFFICIAL_REGISTRATION
 } from '../data/instagramData';
+import { RegistrationCertificateModal } from './RegistrationCertificateModal';
 
 const appointmentVideoH264 = '/assets/appointment-reel-h264.mp4';
 const appointmentVideoOriginal = '/assets/appointment-reel.mp4';
@@ -53,6 +55,7 @@ export const AppointmentSection: React.FC = () => {
   const [appointments, setAppointments] = useState<AppointmentRecord[]>([]);
   const [submittedBooking, setSubmittedBooking] = useState<AppointmentRecord | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCertModalOpen, setIsCertModalOpen] = useState(false);
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -260,8 +263,33 @@ Assalamu Alaikum Syeda Shakila Qazi, I would love to confirm our consultation sl
               </div>
             </div>
 
+            {/* Official Telangana Government Registration Badge */}
+            <div className="p-3.5 rounded-2xl bg-black/60 backdrop-blur-md border border-[#C5A059]/35 flex items-center justify-between gap-3 text-xs font-mono">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-[#107c41]/20 border border-[#107c41]/50 flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-4 h-4 text-[#34A853]" />
+                </div>
+                <div>
+                  <div className="text-white font-semibold flex items-center gap-1.5">
+                    <span>GOVT. OF TELANGANA REGISTERED</span>
+                  </div>
+                  <div className="text-white/60 text-[11px]">
+                    Reg. No. <span className="text-[#C5A059]">{OFFICIAL_REGISTRATION.regNo}</span>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsCertModalOpen(true)}
+                className="px-3 py-1.5 rounded-lg bg-[#C5A059]/15 hover:bg-[#C5A059]/25 border border-[#C5A059]/40 text-[#E6B85C] text-[11px] font-mono transition-colors shrink-0 cursor-pointer"
+              >
+                View Certificate
+              </button>
+            </div>
+
             {/* Quick Phone Consultation Note */}
-            <div className="pt-2 flex items-center gap-3 text-xs font-mono text-white/70">
+            <div className="pt-1 flex items-center gap-3 text-xs font-mono text-white/70">
               <Phone className="w-4 h-4 text-[#C5A059]" />
               <span>
                 Direct Studio Booking: <strong className="text-white">{OFFICIAL_PHONE}</strong>
@@ -517,6 +545,12 @@ Assalamu Alaikum Syeda Shakila Qazi, I would love to confirm our consultation sl
           </div>
         </div>
       </div>
+
+      {/* Registration Certificate Modal */}
+      <RegistrationCertificateModal
+        isOpen={isCertModalOpen}
+        onClose={() => setIsCertModalOpen(false)}
+      />
     </section>
   );
 };

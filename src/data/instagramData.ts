@@ -6,7 +6,28 @@ export const OFFICIAL_PHONE = '+91 9347307151';
 export const OFFICIAL_PHONE_RAW = '9347307151';
 export const OFFICIAL_PHONE_ALT = '+91 93904 89371';
 export const OFFICIAL_EMAIL = 'info@ShakeelaPhotography.in';
-export const OFFICIAL_ADDRESS = 'Shakeela Photography, Janaki Nagar Colony, Toli Chowki, Hyderabad, Telangana 500008, India';
+export const OFFICIAL_ADDRESS = 'SHAKEELA PHOTOGRAPHY, 8-4-68/3/127, Ali Nagar, East Bandlaguda, Mailardevpally, Circle 19, Hyderabad, Telangana, India';
+export const OFFICIAL_EMPLOYER = 'MOHAMMED ADNAN KHAN';
+export const OFFICIAL_REGISTRATION = {
+  regNo: 'SEA/HYD/ALO/19/1395837/2026',
+  act: 'Telangana Shops & Establishments Act, 1988 (Form - II)',
+  form: 'FORM - II (See Rule 3)',
+  department: 'Labour Department, Government of Telangana',
+  establishmentName: 'SHAKEELA PHOTOGRAPHY',
+  employerName: 'MOHAMMED ADNAN KHAN',
+  fatherHusbandName: 'MOHD IMRAN RAZZAK KHAN',
+  employerAge: 26,
+  address: 'SHAKEELA PHOTOGRAPHY, 8-4-68/3/127, ALI NAGAR, EAST BANDLAGUDA, MAILARDEVPALLY, CIRCLE 19, HYDERABAD, TELANGANA',
+  employeesCount: 5,
+  natureOfBusiness: 'VIDEOGRAPHY PHOTOGRAPHY ETC',
+  commencementDate: '01/01/2023',
+  registrationDate: '07/09/2026',
+  signedDate: '07/09/2026',
+  authorityName: 'M NISHMITHA',
+  authorityDesignation: 'ALO_HYD_19',
+  place: 'HYDERABAD',
+  verificationUrl: 'https://labour.telangana.gov.in/'
+};
 export const OFFICIAL_PHOTOGRAPHER = 'Syeda Shakila Qazi';
 export const OFFICIAL_TITLE = 'Best Female Photographer of the Year';
 export const OFFICIAL_BIO = 'Best Female Photographer of the year 🏆 | Candidphotography / Cinematography / Drones / LED | Since 2000 | For Bookings Directly Call: 9347307151 | Hyderabad, India';

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import {
   Award,
   Sparkles,
@@ -9,7 +9,8 @@ import {
   ChevronDown,
   ArrowUpRight,
   MessageCircle,
-  Calendar
+  Calendar,
+  FileCheck2
 } from 'lucide-react';
 import {
   OFFICIAL_PHOTOGRAPHER,
@@ -17,8 +18,10 @@ import {
   OFFICIAL_STATS,
   OFFICIAL_PHONE,
   OFFICIAL_INSTAGRAM_URL,
-  OFFICIAL_INSTAGRAM_HANDLE
+  OFFICIAL_INSTAGRAM_HANDLE,
+  OFFICIAL_REGISTRATION
 } from '../data/instagramData';
+import { RegistrationCertificateModal } from './RegistrationCertificateModal';
 
 const aboutVideoH264 = '/assets/about-reel-h264.mp4';
 const aboutVideoOriginal = '/assets/about-reel.mp4';
@@ -33,6 +36,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
   onExploreCollection,
   onBookAppointment
 }) => {
+  const [isCertModalOpen, setIsCertModalOpen] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -231,9 +235,37 @@ export const AboutSection: React.FC<AboutSectionProps> = ({
                   <span>Complete Parda / Privacy Protocol</span>
                 </div>
               </div>
+
+              {/* Verified Government Registration Box */}
+              <div className="p-3.5 rounded-2xl bg-white/[0.04] border border-[#C5A059]/30 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 text-[#34A853] text-[11px] font-mono font-bold">
+                    <ShieldCheck className="w-3.5 h-3.5" />
+                    <span>GOVT. OF TELANGANA REGISTERED</span>
+                  </div>
+                  <span className="text-[10px] font-mono text-white/50">Form-II</span>
+                </div>
+                <div className="text-[11px] font-mono text-white/80">
+                  Reg: <span className="text-[#E6B85C] font-semibold">{OFFICIAL_REGISTRATION.regNo}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsCertModalOpen(true)}
+                  className="w-full mt-1 inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-xl bg-[#C5A059]/15 hover:bg-[#C5A059]/25 border border-[#C5A059]/35 text-[#E6B85C] font-mono text-[11px] font-medium transition-colors cursor-pointer"
+                >
+                  <FileCheck2 className="w-3 h-3" />
+                  <span>View Official Registration</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Registration Certificate Modal */}
+        <RegistrationCertificateModal
+          isOpen={isCertModalOpen}
+          onClose={() => setIsCertModalOpen(false)}
+        />
 
         {/* Bottom Scroll Indicator */}
         <div className="pt-6 border-t border-white/10 flex items-center justify-between text-xs font-mono text-white/50">
